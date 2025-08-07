@@ -20,7 +20,7 @@ Performance comparison between different combinations of models and losses (eval
 ## Citation ##
 
 If you use MS-SigNet or co-tuplet loss in your research, please cite our work: </br>
-[**F.-H. Huang and H.-M. Lu. Multiscale Feature Learning Using Co-Tuplet Loss for Offline Handwritten Signature Verification. *arXiv preprint arXiv:2308.00428*, 2023.**](https://arxiv.org/abs/2308.00428 "游標顯示")
+[F.-H. Huang and H.-M. Lu. Multiscale Feature Learning Using Co-Tuplet Loss for Offline Handwritten Signature Verification. *arXiv preprint arXiv:2308.00428*, 2023.](https://arxiv.org/abs/2308.00428 "游標顯示")
 
 
 ```
