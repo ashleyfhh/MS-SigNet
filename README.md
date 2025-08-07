@@ -10,7 +10,7 @@ MultiScale Signature feature learning Network for offline handwritten signature 
 
 Performance comparison between different combinations of models and losses (evaluation metrics in %)
 
-<img src="./images/performance.png" alt="performance" height="350">
+<img src="./images/performance.png" alt="performance" height="420">
 
 ## Implementation ##
 * Python ≥ 3.8
