@@ -5,11 +5,10 @@ import torch.nn.functional as F
 
 
 class Model_2(nn.Module):
-    # -- Original version
     def __init__(self):
         super().__init__()
 
-        # The following is for "the shared part"
+        # for "the shared part"
         self.conv1 = nn.Sequential(
             nn.Conv2d(1, 96, kernel_size=11, stride=1),
             nn.ReLU(inplace=True),
@@ -48,7 +47,7 @@ class Model_2(nn.Module):
             nn.BatchNorm2d(256)
         )
 
-        # The following is for "the global branch"
+        # for "the global branch"
         self.conv51 = nn.Sequential(
             nn.Conv2d(384, 256, kernel_size=3, padding=1, padding_mode='zeros'),
             nn.ReLU(inplace=True),
@@ -56,7 +55,7 @@ class Model_2(nn.Module):
             nn.MaxPool2d(3, stride=2)
         )
 
-        # The following is for "the regional branch"
+        # for "the regional branch"
         self.conv52 = nn.Sequential(
             nn.Conv2d(384, 256, kernel_size=3, padding=1, padding_mode='zeros'),
             nn.ReLU(inplace=True),
@@ -78,7 +77,7 @@ class Model_2(nn.Module):
             nn.Sigmoid()
         )
 
-        # Fully connected layer (No need of ReLU)
+        # Fully connected layer
         self.fc = nn.Linear(256, output_dim)
 
     # Define how data flows through the layers
@@ -98,8 +97,8 @@ class Model_2(nn.Module):
         out2f = self.conv2f(out2)               # Transform to the same size as out51 & out52
         out3f = self.conv3f(out3)               # Transform to the same size as out51 & out52
 
-        fus51 = out2f * out3f * out51           # dim: batch_size x 256(c) x 16(h) x 25(w)
-        fus52 = out2f * out3f * out52           # dim: batch_size x 256(c) x 16(h) x 25(w)
+        fus51 = out2f * out3f * out51
+        fus52 = out2f * out3f * out52
 
         # -- Global Regional Channel Attention (GRCA)
         out51a = self.gap(fus51)      # dim: batch_size x 256(c) x 1(h) x 1(w)
@@ -107,8 +106,8 @@ class Model_2(nn.Module):
         out52a = self.gap(fus52)      # dim: batch_size x 256(c) x 1(h) x 1(w)
         out52b = self.ca11(out52a)    
 
-        mul = out51b * out52b            # element-wise multiplicative fusion for latent representation (the same dim as out51b & out52b)
-                                         # self.ca12(mul): as channel weights, batch_size x 256(c) x 1(h) x 1(w)
+        mul = out51b * out52b         # element-wise multiplicative fusion for latent representation (the same dim as out51b & out52b)
+                                        
         out51c = self.ca12(mul) * fus51  
         out52c = self.ca12(mul) * fus52  
 
@@ -133,7 +132,7 @@ class Model_2(nn.Module):
         rv = rv.view(-1, 256, 8, 25, 3)
         rv = rv.permute(0, 4, 1, 2, 3)
         # Horizontal regions: the 1st region, the 2nd region, and the 3rd region
-        r1 = rh[:, 0, :, :, :]        # dim: 18(b) x 256(c) x 16(h) x 13(w)
+        r1 = rh[:, 0, :, :, :]
         r2 = rh[:, 1, :, :, :]
         r3 = rh[:, 2, :, :, :]
 
@@ -153,7 +152,7 @@ class Model_2(nn.Module):
         out_r3 = self.fc(r3)
 
         # Vertical regions: the 4th region, the 5th region, and the 6th region
-        r4 = rv[:, 0, :, :, :]        # dim: 18(b) x 256(c) x 8(h) x 25(w)
+        r4 = rv[:, 0, :, :, :]
         r5 = rv[:, 1, :, :, :]
         r6 = rv[:, 2, :, :, :]
 
