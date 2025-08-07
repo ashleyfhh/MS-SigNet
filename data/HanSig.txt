@@ -1,0 +1,1 @@
+The HanSig signature dataset is accessible at: https://github.com/hsinmin/HanSig
